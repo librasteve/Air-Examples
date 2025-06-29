@@ -1,0 +1,47 @@
+use Air::Functional :BASE;
+use Air::Base;
+use Air::Component;
+
+use Red:api<2>; red-defaults “SQLite”;
+
+my &index = &page.assuming(
+    title       => 'hÅrc',
+    description => 'HTMX, Air, Red, Cro',
+    footer      => footer p ['Aloft on ', b 'Åir'],
+);
+
+model Counter does Component::Red {
+    has UInt  $.id     is serial;
+    has Int   $.count  is rw is column(:default{0});
+
+    method increment is controller {
+        $!count++;
+        $.^save;
+        self
+    }
+
+    method hx-increment(--> Hash()) {
+        :hx-get("counter/$.id/increment"),
+        :hx-target("#counter-$.id"),
+        :hx-swap<outerHTML>,
+        :hx-trigger<submit>,
+    }
+
+    method HTML {
+        input :id("counter-$.id"), :name("counter"), :value($!count)
+    }
+}
+Counter.^create-table;
+
+my $counter = Counter.^create;
+
+sub SITE is export {
+    site :register[$counter], #:theme-color<red>,
+        index
+            main
+                form |$counter.hx-increment, [
+                    h3 'Counter:';
+                    ~$counter;
+                    button :type<submit>, '+';
+                ]
+}

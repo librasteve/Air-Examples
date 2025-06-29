@@ -1,0 +1,37 @@
+{
+    "name": "Air::Examples",
+    "description": "hArc stack website examples (HTMX, Air, Red, Cro)",
+    "version": "0.0.11",
+    "authors": [
+        "librasteve"
+    ],
+    "auth": "zef:librasteve",
+    "depends": [
+        "Air",
+        "Air::Plugin::Hilite"
+    ],
+    "build-depends": [],
+    "provides": {
+        "Air::Examples": "lib/Air/Examples.rakumod",
+        "Air::Examples::SearchTable": "lib/Air/Examples/SearchTable.rakumod",
+        "Air::Examples::Site00-Nano": "lib/Air/Examples/Site00-Nano.rakumod",
+        "Air::Examples::Site01-Minimal": "lib/Air/Examples/Site01-Minimal.rakumod",
+        "Air::Examples::Site02-Sections": "lib/Air/Examples/Site02-Sections.rakumod",
+        "Air::Examples::Site03-Pages": "lib/Air/Examples/Site03-Pages.rakumod",
+        "Air::Examples::Site04-HarcStack": "lib/Air/Examples/Site04-HarcStack.rakumod",
+        "Air::Examples::Site05-PagesFunc": "lib/Air/Examples/Site05-PagesFunc.rakumod",
+        "Air::Examples::Site06-Semantic": "lib/Air/Examples/Site06-Semantic.rakumod",
+        "Air::Examples::Site07-BaseExamples": "lib/Air/Examples/Site07-BaseExamples.rakumod",
+        "Air::Examples::Site08-SearchTable": "lib/Air/Examples/Site08-SearchTable.rakumod",
+        "Air::Examples::Site09-Todos": "lib/Air/Examples/Site09-Todos.rakumod",
+        "Air::Examples::Site10-Counter": "lib/Air/Examples/Site10-Counter.rakumod",
+        "Air::Examples::Site11-Form": "lib/Air/Examples/Site11-Form.rakumod",
+        "Air::Examples::Site12-FormShort": "lib/Air/Examples/Site12-FormShort.rakumod",
+        "Air::Examples::Site13-FormRed": "lib/Air/Examples/Site13-FormRed.rakumod",
+        "Air::Examples::Site14-CounterRed": "lib/Air/Examples/Site14-CounterRed.rakumod",
+        "Air::Examples::Site15-TodosRed": "lib/Air/Examples/Site15-TodosRed.rakumod",
+        "Air::Examples::Site16-Hilite": "lib/Air/Examples/Site16-Hilite.rakumod"
+    },
+    "license": "Artistic-2.0",
+    "source-url": "https://github.com/librasteve/Air-Examples.git"
+}
