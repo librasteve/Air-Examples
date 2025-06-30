@@ -12,8 +12,8 @@ role HxTodo {
     }
     method hx-delete(--> Hash()) {
         :hx-delete("todo/$.id"),
-        :hx-confirm<Are you sure?>,
-        :hx-target<closest tr>,
+        :hx-confirm('Are you sure?'),
+        :hx-target('closest tr'),
         :hx-swap<delete>,
     }
     method hx-toggle(--> Hash()) {

@@ -4,14 +4,14 @@ use Air::Component;
 
 role HxTodo {
     method hx-add(--> Hash()) {
-        :hx-post("todo"),
+        :hx-post('todo'),
         :hx-target<table>,
         :hx-swap<beforeend>,
     }
     method hx-delete(--> Hash()) {
         :hx-delete($.url-path),
-        :hx-confirm<Are you sure?>,
-        :hx-target<closest tr>,
+        :hx-confirm('Are you sure?'),
+        :hx-target('closest tr'),
         :hx-swap<delete>,
     }
     method hx-toggle(--> Hash()) {
@@ -33,6 +33,7 @@ class Todo does Component[:C:R:U:D] {
     }
 
     multi method HTML {
+        note $.url-path;
         tr
             td( input :type<checkbox>, |$.hx-toggle, :$!checked ),
             td( $!checked ?? del $!text !! $!text),
