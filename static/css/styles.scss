@@ -1,5 +1,5 @@
 @use "node_modules/@picocss/pico/scss" with (
-  $theme-color: "green"
+  $theme-color: "azure"
 );
 
 //some root overrides for scale https://github.com/picocss/pico/discussions/482
@@ -32,7 +32,7 @@ article>footer {
 }
 
 b {
-  color: red;
+  color: maroon;
 }
 
 .logo, .logo:hover {
