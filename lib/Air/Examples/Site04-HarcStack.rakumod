@@ -42,11 +42,9 @@ sub SITE is export {
             div [
                 h2 'The hArc Stack';
                 p  'Combining HTMX with raku Air, Red and Cro so that you can ',
-                    em 'just build websites the right way™', '.';
+                    em 'just build websites the right way', '.';
 
-                div :style('border: 1px solid grey; margin:2em; padding-left:2em; max-width:640px;'),
-                    hilite example-code;
-
+                hilite example-code;
                 markdown main-txt;
             ];
         ];
@@ -68,20 +66,19 @@ sub example-code {
         has Int $.count = 0;
 
         method increment is controller {
-            $!count++;
+            $.count++;
             self
         }
 
         method hx-increment(--> Hash()) {
-            :hx-get("counter/$.id/increment"),
-            :hx-target("#counter-$.id"),
+            :hx-get("$.url-path/increment"),
+            :hx-target("#$.html-id"),
             :hx-swap<outerHTML>,
             :hx-trigger<submit>,
         }
 
         method HTML {
-            input :id("counter-$.id"),
-                :name("counter"), :value($!count)
+            input :id($.html-id), :name<counter>, :value($.count)
         }
     }
 
@@ -93,7 +90,7 @@ sub example-code {
                 main
                     form |$counter.hx-increment, [
                         h3 'Counter:';
-                        ~$counter;
+                        $counter;
                         button :type<submit>, '+';
                     ]
     }

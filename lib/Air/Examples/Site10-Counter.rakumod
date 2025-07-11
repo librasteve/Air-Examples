@@ -17,14 +17,14 @@ class Counter does Component {
     }
 
     method hx-increment(--> Hash()) {
-        :hx-get("counter/$.id/increment"),
-        :hx-target("#counter-$.id"),
+        :hx-get("$.url-path/increment"),
+        :hx-target("#$.html-id"),
         :hx-swap<outerHTML>,
         :hx-trigger<submit>,
     }
 
     method HTML {
-        input :id("counter-$.id"), :name("counter"), :value($!count)
+        input :id($.html-id), :name<counter>, :value($.count)
     }
 }
 
@@ -36,7 +36,7 @@ sub SITE is export {
             main
                 form |$counter.hx-increment, [
                     h3 'Counter:';
-                    ~$counter;
+                    $counter;
                     button :type<submit>, '+';
                 ]
 }

@@ -13,14 +13,6 @@ sub SITE is export {
         index #:REFRESH(5),
             main
                 div [
-                    h3 'Tabs';
-                    tabs [
-                        Tab1 => tab p "tada";
-                        Tab2 => tab p "yoda";
-                        Tab3 => tab p "coda";
-                    ];
-                    hr;
-
                     h3 'Button';
                     div :role<group>,
                         [
@@ -64,11 +56,19 @@ sub SITE is export {
                         END
                     hr;
 
+                    h3 'Tabs';
+                    tabs [
+                        Tab1 => tab p "tada";
+                        Tab2 => tab p "yoda";
+                        Tab3 => tab p "coda";
+                    ];
+                    hr;
+
                     h3 'Lightbox';
                     lightbox [button 'hit me'; h1 'lightbox'; p 'ipso facto'];
                     hr;
 
-                    h3 'Dialog';
+                    h3 'Dialog (wip)';
                     dialog;
                     hr;
 
