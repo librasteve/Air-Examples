@@ -13,13 +13,13 @@ sub SITE is export {
 
             main [
                 dashboard [
-                    article :style('order: 1'), h2 'Analytics';
-                    article :style('order: 2'), h2 'Traffic';
-                    article :style('order: 3'), h2 'Comments';
-                    article :style('order: 4'), h2 'Quick Draft';
-                    article :style('order: 5'), h2 'Recent Activity';
-                    article :style('order: 6'), h2 'Site Overview';
-                    article :style('order: 7'), h2 'News';
+                    box :order(1), h2 'Analytics';
+                    box :order(2), h2 'Traffic';
+                    box :order(3), h2 'Comments';
+                    box :order(8), h2 'Quick Draft';
+                    box :order(5), h2 'Recent Activity';
+                    box :order(6), h2 'Site Overview';
+                    box :order(7), h2 'News';
                 ];
             ];
         ];
