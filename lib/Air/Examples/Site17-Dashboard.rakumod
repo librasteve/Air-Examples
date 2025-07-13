@@ -5,15 +5,14 @@ use Air::Component;
 class Dashboard does Section {
     method STYLE {
         Q:to/END/;
-
-        .dashboard {
+        section {
           display: flex;
           flex-wrap: wrap;
           gap: 1rem;
           justify-content: flex-start;
         }
 
-        .box {
+        article {
           display: flex;
           align-items: center;
 
@@ -38,14 +37,14 @@ sub SITE is export {
             ];
 
             main [
-                section :class<dashboard>, [
-                    article :class<box>, :style('order: 1'), h2 'Analytics';
-                    article :class<box>, :style('order: 2'), h2 'Traffic';
-                    article :class<box>, :style('order: 3'), h2 'Comments';
-                    article :class<box>, :style('order: 4'), h2 'Quick Draft';
-                    article :class<box>, :style('order: 5'), h2 'Recent Activity';
-                    article :class<box>, :style('order: 6'), h2 'Site Overview';
-                    article :class<box>, :style('order: 7'), h2 'News';
+                section [
+                    article :style('order: 1'), h2 'Analytics';
+                    article :style('order: 2'), h2 'Traffic';
+                    article :style('order: 3'), h2 'Comments';
+                    article :style('order: 4'), h2 'Quick Draft';
+                    article :style('order: 5'), h2 'Recent Activity';
+                    article :style('order: 6'), h2 'Site Overview';
+                    article :style('order: 7'), h2 'News';
                 ];
             ];
         ];
