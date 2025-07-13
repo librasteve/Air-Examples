@@ -111,7 +111,6 @@ class SearchTable does Component {
 # viz. https://docs.raku.org/language/modules#Exporting_and_selective_importing
 
 my package EXPORT::DEFAULT {
-
     for @components -> $name {
         OUR::{'&' ~ $name.lc} :=
             sub (*@a, *%h) {

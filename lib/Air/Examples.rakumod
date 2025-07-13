@@ -7,7 +7,7 @@ unit class Air::Examples;
 #use Air::Examples::Site04-HarcStack;
 #use Air::Examples::Site05-PagesFunc;
 #use Air::Examples::Site06-Semantic;
-use Air::Examples::Site07-BaseExamples;
+#use Air::Examples::Site07-BaseExamples;
 #use Air::Examples::Site08-SearchTable;
 #use Air::Examples::Site09-Todos;
 #use Air::Examples::Site10-Counter;
@@ -17,6 +17,7 @@ use Air::Examples::Site07-BaseExamples;
 #use Air::Examples::Site14-CounterRed;
 #use Air::Examples::Site15-TodosRed;
 #use Air::Examples::Site16-Hilite;
+use Air::Examples::Site17-Dashboard;
 
 sub routes is export {
     SITE.routes

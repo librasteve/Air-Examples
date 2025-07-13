@@ -30,7 +30,8 @@
         "Air::Examples::Site13-FormRed": "lib/Air/Examples/Site13-FormRed.rakumod",
         "Air::Examples::Site14-CounterRed": "lib/Air/Examples/Site14-CounterRed.rakumod",
         "Air::Examples::Site15-TodosRed": "lib/Air/Examples/Site15-TodosRed.rakumod",
-        "Air::Examples::Site16-Hilite": "lib/Air/Examples/Site16-Hilite.rakumod"
+        "Air::Examples::Site16-Hilite": "lib/Air/Examples/Site16-Hilite.rakumod",
+        "Air::Examples::Site17-Dashboard": "lib/Air/Examples/Site17-Dashboard.rakumod"
     },
     "license": "Artistic-2.0",
     "source-url": "https://github.com/librasteve/Air-Examples.git"
