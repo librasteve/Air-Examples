@@ -2,33 +2,8 @@ use Air::Functional :BASE;
 use Air::Base;
 use Air::Component;
 
-class Dashboard does Section {
-    method STYLE {
-        Q:to/END/;
-        section {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 1rem;
-          justify-content: flex-start;
-        }
-
-        article {
-          display: flex;
-          align-items: center;
-
-          /* Responsive sizing */
-          flex: 1 1 400px;
-          min-width: 400px;
-          max-width: 600px;
-          height: 200px;
-        }
-        END
-    }
-}
-
-
 sub SITE is export {
-    site :register[Dashboard.new],
+    site :register[Dashboard.new, Box.new],
         page #:REFRESH(15),
         [
             header [
@@ -37,7 +12,7 @@ sub SITE is export {
             ];
 
             main [
-                section [
+                dashboard [
                     article :style('order: 1'), h2 'Analytics';
                     article :style('order: 2'), h2 'Traffic';
                     article :style('order: 3'), h2 'Comments';
