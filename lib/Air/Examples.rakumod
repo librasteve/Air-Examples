@@ -17,7 +17,8 @@ unit class Air::Examples;
 #use Air::Examples::Site14-CounterRed;
 #use Air::Examples::Site15-TodosRed;
 #use Air::Examples::Site16-Hilite;
-use Air::Examples::Site17-Dashboard;
+#use Air::Examples::Site17-Dashboard;
+use Air::Examples::Site18-EditRow;
 
 sub routes is export {
     SITE.routes
