@@ -86,8 +86,8 @@ class SearchTable does Component {
 
         $!results.data = Person.^all.grep: {
             $_.firstName.&check ||
-                $_.lastName.&check  ||
-                $_.email.&check
+            $_.lastName.&check  ||
+            $_.email.&check
         };
 
         $!results;
