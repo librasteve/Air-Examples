@@ -25,21 +25,21 @@ class Contact does Component[:R:U] {
     my $onClick =
     q:to/END/;
     let editing = document.querySelector('.editing')
-     if(editing) {
-       Swal.fire({title: 'Already Editing',
-                  showCancelButton: true,
-                  confirmButtonText: 'Yep, Edit This Row!',
-                  text:'Hey!  You are already editing a row!  Do you want to cancel that edit and continue?'})
-       .then((result) => {
-            if(result.isConfirmed) {
-               htmx.trigger(editing, 'cancel')
-               htmx.trigger(this, 'edit')
-            }
+    if(editing) {
+        Swal.fire({title: 'Already Editing',
+        showCancelButton: true,
+        confirmButtonText: 'Yep, Edit This Row!',
+        text:'Hey!  You are already editing a row!  Do you want to cancel that edit and continue?'})
+    .then((result) => {
+        if(result.isConfirmed) {
+            htmx.trigger(editing, 'cancel')
+            htmx.trigger(this, 'edit')
+        }
         })
-     } else {
+    } else {
         htmx.trigger(this, 'edit')
-     }
-     END
+    }
+    END
 
     multi method HTML {
         tr(
@@ -53,9 +53,8 @@ class Contact does Component[:R:U] {
 my @contacts = load-contacts();
 
 class EditTable does Table {
-    method STYLE-LINKS { <https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css> }
+    method STYLE-LINKS  { <https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css> }
     method SCRIPT-LINKS { <https://cdn.jsdelivr.net/npm/sweetalert2@11> }
-    method SCRIPT-LINKS-BODY { <https://unpkg.com/sweetalert/dist/sweetalert.min.js>     }
 
     method class {
         'edit-row-example'
