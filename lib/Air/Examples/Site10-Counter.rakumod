@@ -16,11 +16,13 @@ class Counter does Component {
         self
     }
 
-    method hx-increment(--> Hash()) {
-        :hx-get("$.url-path/increment"),
-        :hx-target("#$.html-id"),
-        :hx-swap<outerHTML>,
-        :hx-trigger<submit>,
+    method hx-increment {
+        %(
+            :hx-get("$.url-path/increment"),
+            :hx-target("#$.html-id"),
+            :hx-swap<outerHTML>,
+            :hx-trigger<submit>,
+        )
     }
 
     method HTML {
