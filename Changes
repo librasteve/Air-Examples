@@ -2,6 +2,10 @@ Revision history for Air::Examples
 
 {{$NEXT}}
 
+0.0.13  2025-07-20T10:01:57+01:00
+    - box, dashboard
+    - Edit Row example
+
 0.0.12  2025-06-30T15:24:41+01:00
     - <one two> => ('one two')
 
