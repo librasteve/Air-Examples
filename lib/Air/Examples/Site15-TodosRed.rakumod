@@ -5,19 +5,19 @@ use Air::Component;
 use Red:api<2>; red-defaults “SQLite”;
 
 role HxTodo {
-    method hx-create(--> Hash()) {
-        :hx-post("todo"),
+    method hx-add(--> Hash()) {
+        :hx-post($.url-name),
         :hx-target<table>,
         :hx-swap<beforeend>,
     }
     method hx-delete(--> Hash()) {
-        :hx-delete("todo/$.id"),
+        :hx-delete($.url-path),
         :hx-confirm('Are you sure?'),
         :hx-target('closest tr'),
         :hx-swap<delete>,
     }
     method hx-toggle(--> Hash()) {
-        :hx-get("todo/$.id/toggle"),
+        :hx-get("$.url-path/toggle"),
         :hx-target<closest tr>,
         :hx-swap<outerHTML>,
     }
