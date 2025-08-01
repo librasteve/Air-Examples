@@ -26,10 +26,8 @@ You will also need a SASS compiler such as Dart (see below).
 - `cd Air-Examples`
 
 ### Set ENV vars for host and port
-```
-export CRO_WEBSITE_HOST="0.0.0.0"
-export CRO_WEBSITE_PORT="4000"  
-```
+- `export CRO_WEBSITE_HOST="0.0.0.0"`
+- `export CRO_WEBSITE_PORT="4000"`
 
 ### Run and view it
 - `raku -I. service.raku`
