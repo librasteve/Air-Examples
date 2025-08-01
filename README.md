@@ -17,12 +17,16 @@ Install raku - eg. from [rakubrew](https://rakubrew.org), then:
 - `zef install Red --exclude="pq:ver<5>"`
 - `zef install Air`
 
-### Install this repo
+If this is your first Raku installation, you may need some native libraries (e.g. for UUID for Red), please check the module specific documentation and issues.
+
+You will also need a SASS compiler such as Dart (see below).
+
+### Git clone this repo
 - `git clone https://github.com/librasteve/Air-Examples.git`
-- `cd Air-Examples` && `zef install .`
+- `cd Air-Examples`
 
 ### Run and view it
-- `raku -Ilib service.raku`
+- `raku -I. service.raku`
 - Open a browser and go to `http://localhost:3000`
 
 Select the example site you want by commenting out the others in the `Examples.rakumod` file.
