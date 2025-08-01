@@ -9,10 +9,13 @@ use Cro::HTTP::Server;
 
 use Air::Examples;
 
+my $host = %*ENV<CRO_WEBSITE_HOST>;
+my $port = %*ENV<CRO_WEBSITE_PORT>;
+
 my Cro::Service $http = Cro::HTTP::Server.new(
     http => <1.1>,
-    host => "0.0.0.0",
-    port => 3000,
+    :$host,
+    :$port,
     application => routes(),
     after => [
         Cro::HTTP::Log::File.new(logs => $*OUT, errors => $*ERR)
