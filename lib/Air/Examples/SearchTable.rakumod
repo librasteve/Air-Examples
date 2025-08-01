@@ -26,20 +26,17 @@ Person.^populate;
 # Verify test records were created
 #note Person.^all.map({ $_.firstName ~ ' ' ~ $_.lastName }).join(", ");
 
-role HxSearchBox {
+class SearchBox {
+    has $.url-path;
+    has $.title;
+
     method hx-search-box(--> Hash()) {
-        :hx-put("{self.url}/{self.id}/search"),
+        :hx-put("$.url-path/search"),
         :hx-trigger<keyup changed delay:500ms, search>,
         :hx-target<#search-results>,
         :hx-swap<outerHTML>,
         :hx-indicator<.htmx-indicator>,
     }
-}
-
-class SearchBox does HxSearchBox {
-    has $.url;
-    has $.id;
-    has $.title;
 
     multi method HTML {
         div [
@@ -71,7 +68,7 @@ class SearchTable does Component {
     has Str  $.title = 'Search';
     has      $.thead = <First Last Email>;
 
-    has SearchBox $.searchbox .= new: :url(self.url), :id(self.id), :$!title;
+    has SearchBox $.searchbox .= new: :url-path(self.url-path), :$!title;
     has Results   $.results   .= new;
 
     method thead {
@@ -86,8 +83,8 @@ class SearchTable does Component {
 
         $!results.data = Person.^all.grep: {
             $_.firstName.&check ||
-            $_.lastName.&check  ||
-            $_.email.&check
+                $_.lastName.&check  ||
+                $_.email.&check
         };
 
         $!results;

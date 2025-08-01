@@ -21,7 +21,6 @@ class Contact does Component[:R:U] {
             ];
         ])
     }
-
     my $onClick =
     q:to/END/;
     let editing = document.querySelector('.editing')
@@ -55,10 +54,6 @@ my @contacts = load-contacts();
 class EditTable does Table {
     method STYLE-LINKS  { <https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css> }
     method SCRIPT-LINKS { <https://cdn.jsdelivr.net/npm/sweetalert2@11> }
-
-    method class {
-        'edit-row-example'
-    }
     method thead {
         <Name Email Action>
     }
@@ -73,7 +68,6 @@ my &index = &page.assuming(
     description => 'HTMX, Air, Red, Cro',
     footer      => footer p ['Aloft on ', b 'Åir'],
 );
-
 sub SITE is export {
     site :register[$edit-table, @contacts[0]],
         index

@@ -24,7 +24,7 @@ role HxTodo {
 }
 
 model Todo does Component::Red[:C:R:U:D] {
-    also does HxTodo;
+        also does HxTodo;
 
     has UInt   $.id      is serial;
     has Bool   $.checked is rw is column = False;
@@ -39,7 +39,7 @@ model Todo does Component::Red[:C:R:U:D] {
     method HTML {
         tr
             td( input :type<checkbox>, |$.hx-toggle, :$!checked ),
-            td( $!checked ?? del $!text !! $!text),
+            td( $!checked ?? del $!text !! $!text ),
             td( button :type<submit>, |$.hx-delete, :style<width:50px>, '-'),
     }
 }
