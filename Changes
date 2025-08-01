@@ -2,6 +2,9 @@ Revision history for Air::Examples
 
 {{$NEXT}}
 
+0.0.14  2025-08-01T14:29:03+01:00
+    - no need to zef install .
+
 0.0.13  2025-07-20T10:01:57+01:00
     - box, dashboard
     - Edit Row example
