@@ -2,6 +2,10 @@
 
 Please raise an Issue if you would like to feedback or assist.
 
+_PLEASE NOTE: FOR THE EDITROW EXAMPLE, PLEASE INSTALL A PATCHED VERSION OF CROMPONENT (V0.0.13) AS FOLLOWS_
+- `zef uninstall Cromponent`
+- `zef install https://github.com/librasteve/Cromponent.git`
+
 # Air::Examples
 
 Playing with the hArc stack (HTMX, Air, Red, Cro) - https://harcstack.org. Some websites with Pico CSS styling.

@@ -24,7 +24,7 @@ my Cro::Service $http = Cro::HTTP::Server.new(
 $http.start;
 my $elapsed = (now - $start).round(0.01);
 say "Build time $elapsed sec";
-say "Listening at http://0.0.0.0:3000";
+say "Listening at http://$host:$port";
 react {
     whenever signal(SIGINT) {
         say "Shutting down...";
