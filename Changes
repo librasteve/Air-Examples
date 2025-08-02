@@ -2,6 +2,9 @@ Revision history for Air::Examples
 
 {{$NEXT}}
 
+0.0.15  2025-08-02T12:16:37+01:00
+    - use site.serve
+
 0.0.14  2025-08-01T14:29:03+01:00
     - no need to zef install .
 
