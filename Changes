@@ -1,6 +1,8 @@
 Revision history for Air::Examples
 
 {{$NEXT}}
+
+0.0.16  2025-08-03T10:10:32+01:00
     - move all examples to .raku
     - remove .rakumod files
     - tidy META6.json and README.md

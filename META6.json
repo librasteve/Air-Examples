@@ -1,16 +1,26 @@
 {
-    "name": "Air::Examples",
-    "description": "hArc stack website examples (HTMX, Air, Red, Cro)",
-    "version": "0.0.15",
-    "authors": [
-        "librasteve"
-    ],
-    "auth": "zef:librasteve",
-    "depends": [
-        "Air",
-        "Air::Plugin::Hilite"
-    ],
-    "build-depends": [],
-    "license": "Artistic-2.0",
-    "source-url": "https://github.com/librasteve/Air-Examples.git"
+  "auth": "zef:librasteve",
+  "authors": [
+    "librasteve"
+  ],
+  "build-depends": [
+  ],
+  "depends": [
+    "Air",
+    "Air::Plugin::Hilite"
+  ],
+  "description": "hArc stack website examples (HTMX, Air, Red, Cro)",
+  "license": "Artistic-2.0",
+  "name": "Air::Examples",
+  "provides": {
+    "Air::Examples": "lib/Air/Examples.rakumod"
+  },
+  "resources": [
+  ],
+  "source-url": "https://github.com/librasteve/Air-Examples.git",
+  "tags": [
+  ],
+  "test-depends": [
+  ],
+  "version": "0.0.16"
 }
