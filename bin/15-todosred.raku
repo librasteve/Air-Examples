@@ -1,10 +1,14 @@
+#!/usr/bin/env raku
+
 use Air::Functional :BASE;
 use Air::Base;
 use Air::Component;
 
+use Red:api<2>; red-defaults “SQLite”;
+
 role HxTodo {
     method hx-add(--> Hash()) {
-        :hx-post('todo'),
+        :hx-post($.url-name),
         :hx-target<table>,
         :hx-swap<beforeend>,
     }
@@ -21,42 +25,47 @@ role HxTodo {
     }
 }
 
-class Todo does Component[:C:R:U:D] {
+model Todo does Component::Red[:C:R:U:D] {
     also does HxTodo;
 
-    has Bool $.checked is rw = False;
-    has Str  $.text;
+    has UInt   $.id      is serial;
+    has Bool   $.checked is rw is column = False;
+    has Str    $.text    is column is required;
 
     method toggle is controller {
         $!checked = !$!checked;
+        $.^save;
         self
     }
 
-    multi method HTML {
+    method HTML {
         tr
             td( input :type<checkbox>, |$.hx-toggle, :$!checked ),
-            td( $!checked ?? del $!text !! $!text),
+            td( $!checked ?? del $!text !! $!text ),
             td( button :type<submit>, |$.hx-delete, :style<width:50px>, '-'),
     }
 }
+Todo.^create-table;
 
 my &index = &page.assuming(
     title       => 'hÅrc',
     description => 'HTMX, Air, Red, Cro',
     footer      => footer p ['Aloft on ', b 'Åir'],
-);
+    );
 
-for <one two> -> $text { Todo.new: :$text };
+for <one two> -> $text { Todo.^create: :$text };
 
-sub SITE is export {
-    site :register(Todo.new),
+my $site =
+    site :register(Todo),
         index
-            main [
-                h3 'Todos';
-                table Todo.all;
-                form  |Todo.hx-add, [
-                    input  :name<text>;
-                    button :type<submit>, '+';
-                ];
-            ]
-}
+        main [
+            h3 'Todos';
+            table Todo.^all;
+            form |Todo.hx-add, [
+                input  :name<text>;
+                button :type<submit>, '+';
+            ];
+        ];
+
+$site.serve;
+

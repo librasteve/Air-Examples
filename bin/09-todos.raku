@@ -1,3 +1,5 @@
+#!/usr/bin/env raku
+
 use Air::Functional :BASE;
 use Air::Base;
 use Air::Component;
@@ -44,19 +46,21 @@ my &index = &page.assuming(
     title       => 'hÅrc',
     description => 'HTMX, Air, Red, Cro',
     footer      => footer p ['Aloft on ', b 'Åir'],
-);
+    );
 
 for <one two> -> $text { Todo.new: :$text };
 
-sub SITE is export {
+my $site =
     site :register(Todo.new),
         index
-            main [
-                h3 'Todos';
-                table Todo.all;
-                form  |Todo.hx-add, [
-                    input  :name<text>;
-                    button :type<submit>, '+';
-                ];
-            ]
-}
+        main [
+            h3 'Todos';
+            table  Todo.all;
+            form  |Todo.hx-add, [
+                input  :name<text>;
+                button :type<submit>, '+';
+            ];
+        ];
+
+$site.serve;
+

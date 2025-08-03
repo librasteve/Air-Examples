@@ -1,3 +1,5 @@
+#!/usr/bin/env raku
+
 use Air::Functional :BASE;
 use Air::Base;
 

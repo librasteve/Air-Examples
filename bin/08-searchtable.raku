@@ -1,7 +1,8 @@
-use Air::Functional;
-use Air::Component;
+#!/usr/bin/env raku
 
-my @components = <SearchTable>;
+use Air::Functional :BASE;
+use Air::Base;
+use Air::Component;
 
 use Red:api<2>;
 
@@ -26,9 +27,9 @@ Person.^populate;
 # Verify test records were created
 #note Person.^all.map({ $_.firstName ~ ' ' ~ $_.lastName }).join(", ");
 
-class SearchBox {
-    has $.url-path;
+class SearchBox does Taggable {
     has $.title;
+    has $.url-path is rw;
 
     method hx-search-box(--> Hash()) {
         :hx-put("$.url-path/search"),
@@ -68,14 +69,8 @@ class SearchTable does Component {
     has Str  $.title = 'Search';
     has      $.thead = <First Last Email>;
 
-    has SearchBox $.searchbox .= new: :url-path(self.url-path), :$!title;
+    has SearchBox $.searchbox .= new: :$!title;
     has Results   $.results   .= new;
-
-    method thead {
-        tr do for |$!thead -> $cell {
-            th :scope<col>, $cell
-        }
-    }
 
     method search(:$needle) is controller{:http-method('PUT')} {
 
@@ -83,41 +78,44 @@ class SearchTable does Component {
 
         $!results.data = Person.^all.grep: {
             $_.firstName.&check ||
-                $_.lastName.&check  ||
-                $_.email.&check
+            $_.lastName.&check  ||
+            $_.email.&check
         };
 
         $!results;
     }
 
     multi method HTML {
-        [
-            $!searchbox.HTML;
+        $!searchbox.url-path = $.url-path;
 
-            table :class<striped>, [
-                thead $.thead;
-                tbody :id<search-results>;
-            ];
+        div [
+            $!searchbox;
+
+            table
+                :class<striped>,
+                :$!thead,
+                :tbody-attrs(%(:id<search-results>));
         ]
     }
 }
 
-##### HTML Functional Export #####
+my &index = &page.assuming( #:REFRESH(1),
+    title       => 'hÅrc',
+    description => 'HTMX, Air, Red, Cro',
+    footer      => footer p ['Aloft on ', b 'Åir'],
+    );
 
-# put in all the tags programmatically
-# viz. https://docs.raku.org/language/modules#Exporting_and_selective_importing
+my $searchtable = SearchTable.new;
 
-my package EXPORT::DEFAULT {
-    for @components -> $name {
-        OUR::{'&' ~ $name.lc} :=
-            sub (*@a, *%h) {
-                ::($name).new( |@a, |%h ).HTML;
-            }
-    }
-}
+my $site =
+    site :register[$searchtable],
+        index
+            main
+                $searchtable;
+
+$site.serve;
 
 ##### Person Data #####
-
 use JSON::Fast;
 sub json-data {
     from-json q:to/END/;

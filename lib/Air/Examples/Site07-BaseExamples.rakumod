@@ -1,6 +1,5 @@
 use Air::Functional :BASE;
 use Air::Base;
-use Air::Component;
 
 my &index = &page.assuming(
     title       => 'hÅrc',
