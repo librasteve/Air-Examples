@@ -1,6 +1,9 @@
 Revision history for Air::Examples
 
 {{$NEXT}}
+    - move all examples to .raku
+    - remove .rakumod files
+    - tidy META6.json and README.md
 
 0.0.15  2025-08-02T12:16:37+01:00
     - use site.serve
