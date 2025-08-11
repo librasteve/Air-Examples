@@ -1,7 +1,5 @@
 #!/usr/bin/env raku
 
-
-# form
 use Air::Form;
 
 class Contact does Form {
@@ -27,31 +25,23 @@ class Contact does Form {
 
 my $contact-form = Contact.empty;
 
-# site
 use Air::Functional :BASE;
 use Air::Base;
 
-class Index is Page {
-    has Str $.title       = 'hÅrc';
-    has Str $.description = 'HTMX, Air, Red, Cro';
-
-    has Nav $.nav = nav(
-        logo    => span( safe '<a href="/">h<b>&Aring;</b>rc</a>' ),
-        widgets => [lightdark],
-                                 );
-
-    has Footer $.footer   = footer p ['Aloft on ', b 'åir'];
-}
-sub index(*@a, *%h) { Index.new( |@a, |%h ) };
+my &index = &page.assuming(
+    title       => 'hÅrc',
+    description => 'HTMX, Air, Red, Cro',
+    footer      => footer p ['Aloft on ', b 'Åir'],
+);
 
 my $site =
     site :register[$contact-form],
         index
-        main
-            content [
-                h2 'Contact Form';
-                $contact-form;
-            ];
+            main
+                content [
+                    h2 'Contact Form';
+                    $contact-form;
+                ];
 ;
 
 $site.serve;

@@ -5,6 +5,7 @@ use Air::Base;
 use Air::Component;
 
 use Red:api<2>;
+red-defaults “SQLite”;
 
 model Person {
     has Int      $.id         is serial;
@@ -20,14 +21,13 @@ model Person {
     }
 }
 
-red-defaults “SQLite”;
 Person.^create-table;
 Person.^populate;
 
 # Verify test records were created
 #note Person.^all.map({ $_.firstName ~ ' ' ~ $_.lastName }).join(", ");
 
-class SearchBox does Taggable {
+class SearchBox   does Component {
     has $.title;
     has $.url-path is rw;
 
@@ -53,7 +53,7 @@ class SearchBox does Taggable {
     }
 }
 
-class Results does Component {
+class Results     does Component {
     has @.data is rw = [];
 
     multi method HTML {
@@ -91,9 +91,7 @@ class SearchTable does Component {
         div [
             $!searchbox;
 
-            table
-                :class<striped>,
-                :$!thead,
+            table :class<striped>, :$!thead,
                 :tbody-attrs(%(:id<search-results>));
         ]
     }
@@ -103,7 +101,7 @@ my &index = &page.assuming( #:REFRESH(1),
     title       => 'hÅrc',
     description => 'HTMX, Air, Red, Cro',
     footer      => footer p ['Aloft on ', b 'Åir'],
-    );
+);
 
 my $searchtable = SearchTable.new;
 
