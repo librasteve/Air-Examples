@@ -61,7 +61,7 @@ sub example-code {
     my &index = &page.assuming( #:REFRESH(5),
         title       => 'hÅrc',
         description => 'HTMX, Air, Red, Cro',
-        footer      => footer p ['Aloft on ', b 'Åir'],
+        footer      => footer ['Aloft on ', b 'Åir'],
     );
 
     class Counter does Component {

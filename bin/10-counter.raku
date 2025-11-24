@@ -3,12 +3,13 @@
 use Air::Functional :BASE;
 use Air::Base;
 use Air::Component;
+use Air::Form;
 
 my &index = &page.assuming( #:REFRESH(5),
     title       => 'hÅrc',
     description => 'HTMX, Air, Red, Cro',
-    footer      => footer p ['Aloft on ', b 'Åir'],
-    );
+    footer      => footer ['Aloft on ', b 'Åir'],
+);
 
 class Counter does Component {
     has Int $.count = 0;
@@ -43,3 +44,5 @@ my $site =
             ];
 
 $site.serve;
+
+

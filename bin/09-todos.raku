@@ -45,13 +45,13 @@ class Todo does Component[:C:R:U:D] {
 my &index = &page.assuming(
     title       => 'hÅrc',
     description => 'HTMX, Air, Red, Cro',
-    footer      => footer p ['Aloft on ', b 'Åir'],
+    footer      => footer ['Aloft on ', b 'Åir'],
     );
 
 for <one two> -> $text { Todo.new: :$text };
 
 my $site =
-    site :register(Todo.new),
+    site :register(Todo.new), :theme-color<pink>,
         index
         main [
             h3 'Todos';
