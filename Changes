@@ -2,6 +2,9 @@ Revision history for Air::Examples
 
 {{$NEXT}}
 
+0.0.17  2025-11-24T18:37:10Z
+    - new Defaults example
+
 0.0.16  2025-08-03T10:10:32+01:00
     - move all examples to .raku
     - remove .rakumod files
