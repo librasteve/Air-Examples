@@ -35,10 +35,10 @@ my &index = &page.assuming( #:REFRESH(5),
         logo    => span( safe '<a href="/">h<b>&Aring;</b>rc</a>' ),
         items   => [:$Content1, :$Content2, :$Google],
         widgets => [lightdark],
-                        ),
+    ),
 
     footer => footer ['Aloft on ', b 'åir'],
-    );
+);
 
 my $site =
     site :bold-color<maroon>,
