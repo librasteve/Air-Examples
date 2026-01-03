@@ -2,6 +2,9 @@ Revision history for Air::Examples
 
 {{$NEXT}}
 
+0.0.19  2026-01-03T18:18:47Z
+    - box -> panel
+
 0.0.18  2025-12-24T09:15:44Z
     - new Rudolph example
 
