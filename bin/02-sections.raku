@@ -41,7 +41,7 @@ my &index = &page.assuming( #:REFRESH(5),
 );
 
 my $site =
-    site :bold-color<maroon>,
+    site :bold-color<maroon>, :register[LightDark.new],
         index
         main $Content1;
 

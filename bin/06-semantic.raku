@@ -4,7 +4,7 @@ use Air::Functional :BASE;
 use Air::Base;
 
 my $site =
-    site :register[Aside],
+    site :register[Aside.new, LightDark.new],
         page
         [
             header [

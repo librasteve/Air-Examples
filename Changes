@@ -1,6 +1,8 @@
 Revision history for Air::Examples
 
 {{$NEXT}}
+    - align to Air:ver<0.1.13>
+    - register LightDark
 
 0.0.19  2026-01-03T18:18:47Z
     - box -> panel

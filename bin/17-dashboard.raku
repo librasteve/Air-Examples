@@ -4,7 +4,7 @@ use Air::Functional :BASE;
 use Air::Base;
 
 my $site =
-    site :register[Dashboard.new, Panel.new],
+    site :register[Dashboard.new, Panel.new, LightDark.new],
         page #:REFRESH(15),
         [
             header [

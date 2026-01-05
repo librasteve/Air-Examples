@@ -44,4 +44,4 @@ my $nav = Nav.new:
 $page1.nav = $page2.nav = $nav;
 
 # site
-(Site.new: pages => [$page1, $page2]).serve;
+(Site.new: pages => [$page1, $page2],).serve;

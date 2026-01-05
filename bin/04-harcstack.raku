@@ -37,7 +37,7 @@ my @tools = []; #[Analytics.new: :provider(Umami), :key<SECRET-KEY-HERE>,];
 
 
 my $harcstack =
-    site :theme-color<azure>, :bold-color<maroon>, :@tools, :register[Air::Plugin::Hilite.new],
+    site :theme-color<azure>, :bold-color<maroon>, :@tools, :register[Air::Plugin::Hilite.new, LightDark.new],
         index
             main
                 div [

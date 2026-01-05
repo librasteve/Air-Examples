@@ -57,7 +57,7 @@ class Index is Page {
 sub index(*@a, *%h) { Index.new( |@a, |%h ) };
 
 my $site =
-    site :register[$contact-form],
+    site :register[$contact-form, LightDark.new],
         index
         main
             content [

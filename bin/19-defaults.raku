@@ -52,4 +52,4 @@ my Nav $nav =
 my Page @pages = [$Page1, $Page2];
 { .nav = $nav } for @pages;
 
-(site :@pages).serve;
+(site :@pages, :register[LightDark.new]).serve;

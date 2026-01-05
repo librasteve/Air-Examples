@@ -34,7 +34,7 @@ my &index = &page.assuming(
 );
 
 my $rudi =
-site :register(shadow), index [
+site :register(shadow, LightDark.new), index [
     main [
         shadow;
         rude-div [
