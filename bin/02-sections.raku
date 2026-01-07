@@ -35,13 +35,13 @@ my &index = &page.assuming( #:REFRESH(5),
         logo    => span( safe '<a href="/">h<b>&Aring;</b>rc</a>' ),
         items   => [:$Content1, :$Content2, :$Google],
         widgets => [lightdark],
-                        ),
+    ),
 
-    footer => footer p ['Aloft on ', b 'åir'],
-    );
+    footer => footer ['Aloft on ', b 'åir'],
+);
 
 my $site =
-    site :bold-color<maroon>,
+    site :bold-color<maroon>, :register[LightDark.new],
         index
         main $Content1;
 

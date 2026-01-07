@@ -18,7 +18,7 @@ my $site =
                 my &index = &page.assuming(
                     title       => 'hÅrc',
                     description => 'HTMX, Air, Red, Cro',
-                    footer      => footer p ['Aloft on ', b 'Åir'],
+                    footer      => footer ['Aloft on ', b 'Åir'],
                 );
 
                 model Counter does Component::Red {

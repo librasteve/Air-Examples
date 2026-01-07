@@ -50,7 +50,7 @@ Todo.^create-table;
 my &index = &page.assuming(
     title       => 'hÅrc',
     description => 'HTMX, Air, Red, Cro',
-    footer      => footer p ['Aloft on ', b 'Åir'],
+    footer      => footer ['Aloft on ', b 'Åir'],
     );
 
 for <one two> -> $text { Todo.^create: :$text };

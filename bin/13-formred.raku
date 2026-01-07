@@ -52,12 +52,12 @@ class Index is Page {
         widgets => [lightdark],
                                  );
 
-    has Footer $.footer   = footer p ['Aloft on ', b 'åir'];
+    has Footer $.footer   = footer ['Aloft on ', b 'åir'];
 }
 sub index(*@a, *%h) { Index.new( |@a, |%h ) };
 
 my $site =
-    site :register[$contact-form],
+    site :register[$contact-form, LightDark.new],
         index
         main
             content [

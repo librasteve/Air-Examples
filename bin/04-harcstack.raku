@@ -37,7 +37,7 @@ my @tools = []; #[Analytics.new: :provider(Umami), :key<SECRET-KEY-HERE>,];
 
 
 my $harcstack =
-    site :theme-color<azure>, :bold-color<maroon>, :@tools, :register[Air::Plugin::Hilite.new],
+    site :theme-color<azure>, :bold-color<maroon>, :@tools, :register[Air::Plugin::Hilite.new, LightDark.new],
         index
             main
                 div [
@@ -61,7 +61,7 @@ sub example-code {
     my &index = &page.assuming( #:REFRESH(5),
         title       => 'hÅrc',
         description => 'HTMX, Air, Red, Cro',
-        footer      => footer p ['Aloft on ', b 'Åir'],
+        footer      => footer ['Aloft on ', b 'Åir'],
     );
 
     class Counter does Component {

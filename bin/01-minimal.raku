@@ -13,11 +13,10 @@ my &planets = &table.assuming( :class<striped>,
     :tfoot[["Average",  "9,126", "0.91", "341"],],
 );
 
-
 my &index = &page.assuming( #:REFRESH(5),
     title       => 'hÅrc',
     description => 'HTMX, Air, Red, Cro',
-    footer      => footer p ['Aloft on ', b 'Åir'],
+    footer      => footer ['Aloft on ', b 'Åir'],
 );
 
 my $mini =

@@ -2,10 +2,9 @@
 
 use Air::Functional :BASE;
 use Air::Base;
-use Air::Plugin::Hilite;
 
 my $site =
-    site :register[Dashboard.new, Box.new],
+    site :register[Dashboard.new, Panel.new, LightDark.new],
         page #:REFRESH(15),
         [
             header [
@@ -15,13 +14,13 @@ my $site =
 
             main [
                 dashboard [
-                    box :order(1), h2 'Analytics';
-                    box :order(2), h2 'Traffic';
-                    box :order(3), h2 'Comments';
-                    box :order(8), h2 'Quick Draft';
-                    box :order(5), h2 'Recent Activity';
-                    box :order(6), h2 'Site Overview';
-                    box :order(7), h2 'News';
+                    panel :order(1), h2 'Analytics';
+                    panel :order(2), h2 'Traffic';
+                    panel :order(3), h2 'Comments';
+                    panel :order(8), h2 'Quick Draft';
+                    panel :order(5), h2 'Recent Activity';
+                    panel :order(6), h2 'Site Overview';
+                    panel :order(7), h2 'News';
                 ];
             ];
         ];

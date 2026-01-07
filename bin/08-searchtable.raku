@@ -100,7 +100,7 @@ class SearchTable does Component {
 my &index = &page.assuming( #:REFRESH(1),
     title       => 'hÅrc',
     description => 'HTMX, Air, Red, Cro',
-    footer      => footer p ['Aloft on ', b 'Åir'],
+    footer      => footer ['Aloft on ', b 'Åir'],
 );
 
 my $searchtable = SearchTable.new;
