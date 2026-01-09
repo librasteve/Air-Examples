@@ -12,10 +12,6 @@ class Simple-Greeting does Component {
 
     ## put head JS / CSS methods here
 
-    method STYLE {
-        Q|p {color:blue}|
-    }
-
     method SCRIPT {
         Q|
             import {html, css, LitElement} from 'lit';
@@ -36,7 +32,7 @@ class Simple-Greeting does Component {
     }
 
     method HTML {
-        '<simple-greeting name="' ~ $!name ~ '"></simple-greeting>'
+        el 'simple-greeting'
     }
 }
 sub simple-greeting(*@a, *%h) { Simple-Greeting.new( |@a, |%h ) }

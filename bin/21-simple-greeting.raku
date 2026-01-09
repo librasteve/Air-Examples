@@ -4,25 +4,11 @@
 
 use Air::Functional :BASE;
 use Air::Base;
-use Air::Component;
-
-class Simple-Greeting does Component {
-    has Str $.name = 'Somebody';
-
-    method STYLE {
-        Q|p {color:blue}|
-    }
-
-    method HTML {
-        p "Hello, $.name!"
-    }
-}
-sub simple-greeting(*@a, *%h) { Simple-Greeting.new( |@a, |%h ) }
 
 my $site =
-    site :register(Simple-Greeting.new),
+    site
         page
             main
-                simple-greeting :name<World>;
+                p el 'simple-greeting', :name<John>, [span 'yo'; span 'ho'];
 
 $site.serve;
