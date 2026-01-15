@@ -4,8 +4,10 @@ Please raise an Issue if you would like to feedback or assist.
 
 _PLEASE NOTE: FOR THE EDITROW EXAMPLE, PLEASE INSTALL A PATCHED VERSION OF CROMPONENT (V0.0.13) AS FOLLOWS_
 - `zef uninstall Cromponent`
-- `zef install https://github.com/librasteve/Cromponent.git`
-- `zef install . --force-install`
+- `git clone https://github.com/librasteve/Cromponent.git`
+- `cd Cromponent`
+- `git checkout -b editrow`
+- `zef install .`
 
 # Air::Examples
 
