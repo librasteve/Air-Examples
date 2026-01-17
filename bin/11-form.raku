@@ -5,7 +5,7 @@ use Air::Base;
 use Air::Form;
 
 class Contact does Form {
-    has Str    $.name     is validated(%va<text>)  is required;
+    has Str    $.name     is validated(%va<name>)  is required;
     has Str    $.street   is validated(%va<text>);
     has Str    $.city     is validated(%va<text>);
     has Str    $.state    is validated(%va<text>);

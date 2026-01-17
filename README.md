@@ -37,6 +37,6 @@ You will also need a SASS compiler such as Dart (see below).
 
 ## COPYRIGHT AND LICENSE
 
-Copyright(c) 2025 Henley Cloud Consulting Ltd.
+Copyright(c) 2026 Henley Cloud Consulting Ltd.
 
 This library is free software; you can redistribute it and/or modify it under the Artistic License 2.0.
