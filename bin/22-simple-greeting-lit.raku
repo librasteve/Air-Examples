@@ -10,7 +10,7 @@ use Air::Component;
 class Simple-Greeting does Component {
     has Str $.name = 'Somebody';
 
-    ## put head JS / CSS methods here
+    ## put head JS / CSS methods here./00
 
     method SCRIPT {
         Q|
