@@ -2,7 +2,6 @@
 
 use Air::Functional :BASE;
 use Air::Base;
-use Air::Component;
 use Air::Plugin::Hilite;
 
 my $htmx = external :href<https://htmx.org>;
@@ -20,7 +19,7 @@ my &index = &page.assuming( #:REFRESH(15),
         logo    => span( safe '<a href="/">h<b>&Aring;</b>rc</a>' ),
         items   => [:$htmx,:$air,:$red,:$cro,:$raku,:$talk],
         widgets => [lightdark],
-                        ),
+    ),
 
     footer => footer(
         p safe Q|
@@ -31,7 +30,7 @@ my &index = &page.assuming( #:REFRESH(15),
         &nbsp;&amp;&nbsp;
         Styled by <a href="https://picocss.com" target="_blank">picocss</a>.
     |),
-    );
+);
 
 my @tools = []; #[Analytics.new: :provider(Umami), :key<SECRET-KEY-HERE>,];
 
