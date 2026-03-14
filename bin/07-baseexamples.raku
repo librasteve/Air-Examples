@@ -7,7 +7,7 @@ my &index = &page.assuming(
     title       => 'hÅrc',
     description => 'HTMX, Air, Red, Cro',
     footer      => footer ['Aloft on ', b 'Åir'],
-    );
+);
 
 my $base-examples =
     site :register[Tabs.new, Lightbox.new, Dialog.new], #:theme-color<blue>,

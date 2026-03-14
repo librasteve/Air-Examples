@@ -51,7 +51,7 @@ my &index = &page.assuming(
 for <one two> -> $text { Todo.new: :$text };
 
 my $site =
-    site :register(Todo.new), :theme-color<pink>,
+    site :register(Todo.new), :theme-color<blue>,
         index
         main [
             h3 'Todos';
