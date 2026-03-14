@@ -15,9 +15,7 @@ my &index = &page.assuming(
     footer      => footer ['Aloft on ', b 'Åirs'],
 );
 
-my $logo-path = '../static/logos';
-my $original  = 'original';
-my $adjusted  = 'adjusted';
+my $path = '../static/logos';
 
 my %logos = (
     'atikon-logo.png'           => 'https://www.atikon.com',
@@ -29,36 +27,10 @@ my %logos = (
     'virtual_blue-logo.png'     => 'https://virtual.blue',
 );
 
-my @logo-files = %logos.keys.sort;
-
-for @logo-files -> $filename {
-    my $src = "$logo-path/$original/$filename";
-    my $tgt = "$logo-path/$adjusted/$filename";
-    qqx`magick $src -resize 100x40 $tgt`;
-}
-
-my @logo-anchors =
-    [
-        for @logo-files {
-            a( :href(%logos{$_}), img :src("$logo-path/$adjusted/$_") ) .HTML;
-        }
-    ];
-
-my %grid-attrs = (
-    :justify-items<center>,
-    :align-items<center>,
-    :background-color<silver>,
-    :padding<10px>,
-);
-
-my $base-examples = site :register[Grid.new, LightDark.new], index main
+my $base-examples = site :register[Logos.new, LightDark.new], index main
     div [
         h5 'Sponsors';
-        grid
-            :cols(+%logos),
-            :gap(1),
-            :attrs(%grid-attrs),
-            @logo-anchors;
+        logos :$path, :%logos;
         hr;
     ];
 
