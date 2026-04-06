@@ -6,6 +6,8 @@ use Air::Component;
 
 use Red:api<2>; red-defaults “SQLite”;
 
+#red-defaults “SQLite”, database => 'test.sqlite3';
+
 role HxTodo {
     method hx-add(--> Hash()) {
         :hx-post($.url-name),

@@ -15,8 +15,6 @@ my &index = &page.assuming(
     footer      => footer ['Aloft on ', b 'Åirs'],
 );
 
-my $path = '../static/logos';
-
 my %logos = (
     'atikon-logo.png'           => 'https://www.atikon.com',
     'cns-logo.png'              => '',
@@ -30,7 +28,7 @@ my %logos = (
 my $base-examples = site :register[Logos.new, LightDark.new], index main
     div [
         h5 'Sponsors';
-        logos :$path, :%logos;
+        logos :%logos;
         hr;
     ];
 

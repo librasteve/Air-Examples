@@ -3,26 +3,50 @@
 use Air::Functional :BASE;
 use Air::Base;
 
-my Page $Page1 =
-    page
-        main
-            div [
-                h3 'Page 1';
-            ];
+sub common($content) {
+    main
+        div [
+            h3 $content;
+        ];
+}
 
-my Page $Page2 =
-    page
-        main
-            div [
-                h3 'Page 2';
-            ];
+#index can be anything eg '/'
+my @pages = (
+    Page.new(stub => 'home',                           common('home' )),
+    Page.new(stub => 'about',                          common('about')),
+    Page.new(stub => 'blog',                           common('blog' )),
+    Page.new(stub => 'first-post',  parent => 'blog',  common('1st'  )),
+    Page.new(stub => 'second-post', parent => 'blog',  common('2nd'  )),
+    Page.new(stub => 'team',        parent => 'about', common('team' )),
+);
 
-my Nav $nav =
-    nav
-        items => [:$Page1, :$Page2],
+#longhand
+#my Nav $nav =
+#    nav
+#        items => [
+#            home        => @pages[0],
+#            about       => @pages[1],
+#            blog        => @pages[2],
+#            first-post  => @pages[3],
+#            second-post => @pages[4],
+#            team        => @pages[5],
+#        ];
 
-my Page @pages = [$Page1, $Page2];
-{ .nav = $nav } for @pages;
+my Nav $nav = nav( items => (@pages.map: {.stub => $_}) );
+@pages.map: { .nav = $nav };
 
-site(:@pages).serve;
+my $site = Site.new: :@pages;
+
+#some debug
+note "\nSitemap:";
+.note for $site.sitemap.list;
+note "\nSite Tree:";
+note $site.tree;
+note "\nLookup:";
+note $site.sitemap.lookup(<blog second-post>);
+note "\nSitemap routes:";
+note $site.sitemap.routes;
+
+$site.serve;
+
 
