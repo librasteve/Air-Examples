@@ -41,7 +41,7 @@ my $site = Site.new: :@pages;
 note "\nSitemap:";
 .note for $site.sitemap.list;
 note "\nSite Tree:";
-note $site.tree;
+note $site.index.tree;
 note "\nLookup:";
 note $site.sitemap.lookup(<blog second-post>);
 note "\nSitemap routes:";
