@@ -20,19 +20,19 @@ my @pages = (
     Page.new(stub => 'team',        parent => 'about', common('team' )),
 );
 
-my Nav $nav = nav( items => (@pages.map: {.stub => $_}) );
+my Nav $nav = nav( @pages.map: {.stub => $_});
 @pages.map: { .nav = $nav };
 
 my $site = Site.new: :@pages;
 
-#note "\nSitemap:";
-#.note for $site.sitemap.list;
-#note "\nSite Tree:";
-#note $site.index.tree;
-#note "\nLookup:";
-#note $site.sitemap.lookup(<blog second-post>);
-#note "\nSitemap routes:";
-#note $site.sitemap.routes;
+note "\nSitemap:";
+.note for $site.sitemap.list;
+note "\nSite Tree:";
+note $site.index.tree;
+note "\nLookup:";
+note $site.sitemap.lookup(<blog second-post>);
+note "\nSitemap routes:";
+note $site.sitemap.routes;
 
 $site.serve;
 
