@@ -63,4 +63,3 @@ my $site =
         ];
 
 $site.serve;
-

@@ -44,5 +44,3 @@ my $site =
             ];
 
 $site.serve;
-
-
