@@ -60,6 +60,10 @@ site :register(shadow, LightDark.new), index [
 
         - *CookieCrunch:* a deliberately pointless game about collecting virtual cookies.
 
+        ```raku
+            say 0.1 + 0.2;
+        ```
+
         END
         rude-art markdown q:to/END/;
         ## Contact
