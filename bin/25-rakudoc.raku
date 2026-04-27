@@ -4,6 +4,7 @@ use Air::Functional :BASE;
 use Air::Base;
 use Air::Plugin::RakuDoc;
 
+
 my &index = &page.assuming(
     title       => 'hÅrc',
     description => 'HTMX, Air, Red, Cro',
@@ -17,17 +18,10 @@ my &index = &page.assuming(
 );
 
 my $base-examples =
-    site :register[Air::Plugin::RakuDoc.new, LightDark.new], :!scss,
+    site :register[Air::Plugin::RakuDoc.new, LightDark.new], :theme-color<green>, :bold-color<red>,
         index
         main
             div [
-
-                h1 'regular head';
-                h3 'regular head3';
-                p 'regular text';
-                p em 'emphasis';
-                p b 'bold';
-
                 rakudoc q:to/RAKUDOC/;
                     =begin rakudoc :!toc
                     =head Some RakuDoc
@@ -36,6 +30,7 @@ my $base-examples =
                     =item First item
                     =item Second item
                     =item2 Now a second level
+                    =item3 And a third
                     =item Back to the first level
 
                     And now some ordinary text.
@@ -108,6 +103,8 @@ my $base-examples =
                     =end table
                     =end rakudoc
                     RAKUDOC
+
+                hr;
 
                 rakudoc q:to/RAKUDOC/;
                     =begin pod
