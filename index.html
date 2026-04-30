@@ -1,0 +1,302 @@
+
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<script integrity="sha384-xcuj3WpfgjlKF+FXhSQFQ0ZNr39ln+hwjN3npfM9VBnUskLolQAcN80McRIVOPuO" src="https://unpkg.com/htmx.org@1.9.5" crossorigin="anonymous"></script>
+
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/languages/haskell.min.js"></script>
+
+<link type="image/x-icon" href="/img/favicon.ico" rel="icon" />
+<link rel="stylesheet" href="/css/styles.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" />
+<style>/* Custom styles for the hamburger menu */
+.menu {
+    display: none;
+    flex-direction: column;
+    gap: 10px;
+    position: absolute;
+    top: 60px;
+    right: 20px;
+    background: rgba(0, 0, 0, .95);
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(128, 128, 128, .2);
+    z-index: 800;
+}
+
+.menu a {
+    display: block;
+}
+
+.menu.show {
+    display: flex;
+}
+
+.hamburger {
+    color: var(--pico-primary);
+    display: none;
+    cursor: pointer;
+    font-size: 2.5rem;
+    background: none;
+    border: none;
+    padding: 0.5rem;
+}
+
+@media (max-width: 768px) {
+    .hamburger {
+        display: block;
+    }
+
+    .nav-links {
+        display: none;
+    }
+}
+</style>
+</head>
+
+<body>
+<header class="container"></header>
+<main class="container"><style>
+    #grid-1 {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: repeat(1, 1fr);
+        gap: 6em;
+        direction: ltr;
+        
+    }
+
+    @media (max-width: 1024px) {
+        #grid-1 {
+            display: flex;
+            flex-direction: column;
+            gap: 6em;
+        }
+    }
+</style>
+
+<div id="grid-1">
+                <div class="raku-code">
+                    <button class="copy-code" title="copy code">⿻</button>
+                    
+                    <div><pre class="browser-hl">
+<code class="language-python">
+&quot;&quot;&quot;Python Lark-grammar parser for the invoice DSL. (130 loc)&quot;&quot;&quot;
+
+from dataclasses import dataclass, field
+from lark import Lark, Transformer
+
+GRAMMAR = r&quot;&quot;&quot;
+    start: invoice_line (_NL | field_line | item_line | tax_line)*
+
+    invoice_line: _WS? &quot;invoice&quot; _WS ID _NL
+    field_line:   _WS? &quot;date&quot;   _WS DATE           _NL
+                | _WS? &quot;client&quot; _WS ESCAPED_STRING  _NL
+    item_line:    _WS? &quot;item&quot; _WS ESCAPED_STRING _WS &quot;hours&quot; \
+                      _WS NUMBER _WS &quot;rate&quot; _WS NUMBER _NL
+    tax_line:     _WS? &quot;tax&quot; _WS PERCENT _NL
+
+    DATE:    /\d&#123;4&#125;-\d&#123;2&#125;-\d&#123;2&#125;/
+    ID:      /[A-Za-z0-9_-]+/
+    PERCENT: /\d+(\.\d+)?%/
+    _NL:     /[ \t]*\r?\n/
+    _WS:     /[ \t]+/
+
+    %import common.NUMBER
+    %import common.ESCAPED_STRING
+&quot;&quot;&quot;
+
+
+@dataclass
+class Item:
+    description: str
+    hours: float
+    rate: float
+
+    @property
+    def subtotal(self):
+        return self.hours * self.rate
+
+
+@dataclass
+class Invoice:
+    id: str = &quot;&quot;
+    date: str = &quot;&quot;
+    client: str = &quot;&quot;
+    items: list = field(default_factory=list)
+    tax_rate: float = 0.0
+
+    @property
+    def subtotal(self):
+        return sum(i.subtotal for i in self.items)
+
+    @property
+    def tax(self):
+        return self.subtotal * self.tax_rate
+
+    @property
+    def total(self):
+        return self.subtotal + self.tax
+
+
+class InvoiceTransformer(Transformer):
+    def start(self, items):
+        inv = Invoice()
+        for item in items:
+            if isinstance(item, dict):
+                inv.__dict__.update(item)
+            elif isinstance(item, Item):
+                inv.items.append(item)
+        return inv
+
+    def invoice_line(self, tokens):
+        return &#123;&quot;id&quot;: str(tokens[0])&#125;
+
+    def field_line(self, tokens):
+        # tokens[0] is either DATE or ESCAPED_STRING; infer key from type
+        token = tokens[0]
+        if token.type == &quot;DATE&quot;:
+            return &#123;&quot;date&quot;: str(token)&#125;
+        else:
+            return &#123;&quot;client&quot;: str(token).strip(&#39;&quot;&#39;)&#125;
+
+    def item_line(self, tokens):
+        desc = str(tokens[0]).strip(&#39;&quot;&#39;)
+        hours = float(tokens[1])
+        rate = float(tokens[2])
+        return Item(desc, hours, rate)
+
+    def tax_line(self, tokens):
+        return &#123;&quot;tax_rate&quot;: float(str(tokens[0]).rstrip(&quot;%&quot;)) / 100&#125;
+
+
+_parser = Lark(GRAMMAR, parser=&quot;earley&quot;, ambiguity=&quot;resolve&quot;)
+
+
+def parse(text: str) -&gt; Invoice:
+    tree = _parser.parse(text.strip() + &quot;\n&quot;)
+    return InvoiceTransformer().transform(tree)
+
+
+def render(inv: Invoice) -&gt; str:
+    lines = [
+        f&quot;Invoice: &#123;inv.id&#125;&quot;,
+        f&quot;Date:    &#123;inv.date&#125;&quot;,
+        f&quot;Client:  &#123;inv.client&#125;&quot;,
+        &quot;&quot;,
+        f&quot;&#123;&#39;Description&#39;:&lt;30&#125; &#123;&#39;Hours&#39;:&gt;6&#125; &#123;&#39;Rate&#39;:&gt;8&#125; &#123;&#39;Subtotal&#39;:&gt;10&#125;&quot;,
+        &quot;-&quot; * 58,
+    ]
+    for item in inv.items:
+        lines.append(f&quot;&#123;item.description:&lt;30&#125; &#123;item.hours:&gt;6.1f&#125; \
+            &#123;item.rate:&gt;8.2f&#125; &#123;item.subtotal:&gt;10.2f&#125;&quot;)
+    lines += [
+        &quot;-&quot; * 58,
+        f&quot;&#123;&#39;Subtotal&#39;:&gt;46&#125; &#123;inv.subtotal:&gt;10.2f&#125;&quot;,
+        f&quot;&#123;&#39;Tax (&#39; + str(int(inv.tax_rate * 100)) + &#39;%)&#39;:&gt;46&#125; &#123;inv.tax:&gt;10.2f&#125;&quot;,
+        f&quot;&#123;&#39;Total&#39;:&gt;46&#125; &#123;inv.total:&gt;10.2f&#125;&quot;,
+    ]
+    return &quot;\n&quot;.join(lines)
+
+
+EXAMPLE = &quot;&quot;&quot;\
+invoice INV-001
+  date 2026-04-29
+  client &quot;Acme Corp&quot;
+
+  item &quot;Website redesign&quot;  hours 10  rate 150
+  item &quot;Hosting setup&quot;     hours 2   rate 100
+
+  tax 8%
+&quot;&quot;&quot;
+
+if __name__ == &quot;__main__&quot;:
+    inv = parse(EXAMPLE)
+    print(render(inv))
+</code></pre>
+</div>
+                </div>
+            
+                <div class="raku-code">
+                    <button class="copy-code" title="copy code">⿻</button>
+                    
+                    <div><pre class="nohighlights">
+<br><br><span class="rainbow-rakudoc_markup">#|</span><span class="rainbow-rakudoc_text"> Raku Grammar parser for the Invoice DSL. (92 loc)</span><br><br><span class="rainbow-keyword">use</span>&nbsp;Actionable;<br><br><br><span class="rainbow-keyword">grammar</span>&nbsp;<span class="rainbow-type">Grammar</span>&nbsp;&#123;<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-keyword">token</span>&nbsp;TOP&nbsp;<span class="rainbow-regex_delimiter">&#123;</span><span class="rainbow-regex_special"><br>        &lt;invoice-line&gt;<br>        [ \n+ &lt;ws&gt; [ &lt;field-line&gt; | &lt;item-line&gt; ] ]*<br>        \n*<br>    </span><span class="rainbow-regex_delimiter">&#125;</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-keyword">rule</span>&nbsp;&nbsp;invoice-line&nbsp;<span class="rainbow-regex_delimiter">&#123;</span><span class="rainbow-regex_special"> </span><span class="rainbow-regex_literal">invoice</span><span class="rainbow-regex_special">  &lt;id&gt;                  </span><span class="rainbow-regex_delimiter">&#125;</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-keyword">rule</span>&nbsp;&nbsp;field-line&nbsp;&nbsp;&nbsp;<span class="rainbow-regex_delimiter">&#123;</span><span class="rainbow-regex_special"> | </span><span class="rainbow-regex_literal">date</span><span class="rainbow-regex_special">   &lt;date&gt;<br>                         | </span><span class="rainbow-regex_literal">client</span><span class="rainbow-regex_special"> &lt;client=quoted&gt;<br>                         | </span><span class="rainbow-regex_literal">tax</span><span class="rainbow-regex_special">    &lt;tax-rate=number&gt; &#39;</span><span class="rainbow-regex_literal">%</span><span class="rainbow-regex_special">&#39; </span><span class="rainbow-regex_delimiter">&#125;</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-keyword">rule</span>&nbsp;&nbsp;item-line&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-regex_delimiter">&#123;</span><span class="rainbow-regex_special"> </span><span class="rainbow-regex_literal">item</span><span class="rainbow-regex_special">     &lt;description=quoted&gt;<br>                         </span><span class="rainbow-regex_literal">hours</span><span class="rainbow-regex_special">    &lt;hours=number&gt;<br>                         </span><span class="rainbow-regex_literal">rate</span><span class="rainbow-regex_special">     &lt;rate=number&gt;         </span><span class="rainbow-regex_delimiter">&#125;</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-keyword">token</span>&nbsp;id&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-regex_delimiter">&#123;</span><span class="rainbow-regex_special"> &lt;[A..Za..z0..9_\-]&gt;+      </span><span class="rainbow-regex_delimiter">&#125;</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-keyword">token</span>&nbsp;date&nbsp;&nbsp;&nbsp;<span class="rainbow-regex_delimiter">&#123;</span><span class="rainbow-regex_special"> \d**</span><span class="rainbow-regex_literal">4</span><span class="rainbow-regex_special"> &#39;</span><span class="rainbow-regex_literal">-</span><span class="rainbow-regex_special">&#39; \d**</span><span class="rainbow-regex_literal">2</span><span class="rainbow-regex_special"> &#39;</span><span class="rainbow-regex_literal">-</span><span class="rainbow-regex_special">&#39; \d**</span><span class="rainbow-regex_literal">2</span><span class="rainbow-regex_special"> </span><span class="rainbow-regex_delimiter">&#125;</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-keyword">token</span>&nbsp;quoted&nbsp;<span class="rainbow-regex_delimiter">&#123;</span><span class="rainbow-regex_special"> &#39;</span><span class="rainbow-regex_literal">&quot;</span><span class="rainbow-regex_special">&#39; &lt;( &lt;-[&quot;]&gt;+ )&gt; &#39;</span><span class="rainbow-regex_literal">&quot;</span><span class="rainbow-regex_special">&#39;     </span><span class="rainbow-regex_delimiter">&#125;</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-keyword">token</span>&nbsp;number&nbsp;<span class="rainbow-regex_delimiter">&#123;</span><span class="rainbow-regex_special"> \d+ [ &#39;</span><span class="rainbow-regex_literal">.</span><span class="rainbow-regex_special">&#39; \d+ ]?          </span><span class="rainbow-regex_delimiter">&#125;</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-keyword">token</span>&nbsp;ws&nbsp;<span class="rainbow-regex_delimiter">&#123;</span><span class="rainbow-regex_special"> \h* </span><span class="rainbow-regex_delimiter">&#125;</span>&nbsp;&nbsp;<span class="rainbow-comment">#horizontal whitespace only<br></span>&#125;<br><br><br><br><span class="rainbow-keyword">class</span>&nbsp;Item&nbsp;<span class="rainbow-keyword">does</span>&nbsp;Actionable&nbsp;&#123;<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-keyword">has</span>&nbsp;<span class="rainbow-type">Str</span>&nbsp;&nbsp;<span class="rainbow-name_scalar">$.description</span>;<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-keyword">has</span>&nbsp;<span class="rainbow-type">Real</span>&nbsp;<span class="rainbow-name_scalar">$.hours</span>;<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-keyword">has</span>&nbsp;<span class="rainbow-type">Real</span>&nbsp;<span class="rainbow-name_scalar">$.rate</span>;<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-keyword">method</span>&nbsp;subtotal&nbsp;&#123;&nbsp;<span class="rainbow-name_scalar">$.hours</span>&nbsp;<span class="rainbow-operator">*</span>&nbsp;<span class="rainbow-name_scalar">$.rate</span>&nbsp;&#125;<br>&#125;<br><br><br><br><br><br><br><span class="rainbow-keyword">class</span>&nbsp;Invoice&nbsp;<span class="rainbow-keyword">does</span>&nbsp;Actionable&nbsp;&#123;<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-keyword">has</span>&nbsp;<span class="rainbow-type">Str</span>&nbsp;&nbsp;<span class="rainbow-name_scalar">$.id</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-keyword">is</span>&nbsp;<span class="rainbow-keyword">rw</span>&nbsp;<span class="rainbow-operator">=</span>&nbsp;<span class="rainbow-string_delimiter">&quot;</span><span class="rainbow-string_delimiter">&quot;</span>;<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-keyword">has</span>&nbsp;<span class="rainbow-type">Str</span>&nbsp;&nbsp;<span class="rainbow-name_scalar">$.date</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-keyword">is</span>&nbsp;<span class="rainbow-keyword">rw</span>&nbsp;<span class="rainbow-operator">=</span>&nbsp;<span class="rainbow-string_delimiter">&quot;</span><span class="rainbow-string_delimiter">&quot;</span>;<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-keyword">has</span>&nbsp;<span class="rainbow-type">Str</span>&nbsp;&nbsp;<span class="rainbow-name_scalar">$.client</span>&nbsp;&nbsp;&nbsp;<span class="rainbow-keyword">is</span>&nbsp;<span class="rainbow-keyword">rw</span>&nbsp;<span class="rainbow-operator">=</span>&nbsp;<span class="rainbow-string_delimiter">&quot;</span><span class="rainbow-string_delimiter">&quot;</span>;<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-keyword">has</span>&nbsp;<span class="rainbow-type">Real</span>&nbsp;<span class="rainbow-name_scalar">$.tax-rate</span>&nbsp;<span class="rainbow-keyword">is</span>&nbsp;<span class="rainbow-keyword">rw</span>&nbsp;<span class="rainbow-operator">=</span>&nbsp;0.0;<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-keyword">has</span>&nbsp;Item&nbsp;<span class="rainbow-name_array">@.items</span>;<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-keyword">method</span>&nbsp;transform(<span class="rainbow-type">Str</span>&nbsp;<span class="rainbow-name_scalar">$attr</span><span class="rainbow-operator">,</span>&nbsp;<span class="rainbow-name_scalar">$raw</span>)&nbsp;&#123;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-name_scalar">$attr</span>&nbsp;<span class="rainbow-operator">eq</span>&nbsp;<span class="rainbow-string_delimiter">&#39;</span><span class="rainbow-string">tax-rate</span><span class="rainbow-string_delimiter">&#39;</span>&nbsp;<span class="rainbow-operator">??</span>&nbsp;<span class="rainbow-name_scalar">$raw</span>&nbsp;<span class="rainbow-operator">/</span>&nbsp;100&nbsp;<span class="rainbow-operator">!!</span>&nbsp;<span class="rainbow-name_scalar">$raw</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&#125;<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-keyword">method</span>&nbsp;subtotal&nbsp;&#123;&nbsp;[<span class="rainbow-operator">+</span>]&nbsp;<span class="rainbow-name_array">@.items</span>.<span class="rainbow-routine">map</span>(<span class="rainbow-operator">*</span>.subtotal)&nbsp;&#125;<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-keyword">method</span>&nbsp;tax&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#123;&nbsp;<span class="rainbow-name_scalar">$.subtotal</span>&nbsp;<span class="rainbow-operator">*</span>&nbsp;<span class="rainbow-name_scalar">$.tax-rate</span>&nbsp;&#125;<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-keyword">method</span>&nbsp;<span class="rainbow-routine">total</span>&nbsp;&nbsp;&nbsp;&nbsp;&#123;&nbsp;<span class="rainbow-name_scalar">$.subtotal</span>&nbsp;<span class="rainbow-operator">+</span>&nbsp;<span class="rainbow-name_scalar">$.tax</span>&nbsp;&#125;<br>&#125;<br><br><br><br><br><br><br><br><br><br><br><span class="rainbow-keyword">class</span>&nbsp;Actions&nbsp;&#123;<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-keyword">method</span>&nbsp;TOP($<span class="rainbow-operator">/</span>)&nbsp;&#123;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-keyword">my</span>&nbsp;<span class="rainbow-name_scalar">$inv</span>&nbsp;<span class="rainbow-operator">=</span>&nbsp;Invoice.<span class="rainbow-routine">action</span>($&lt;head-line&gt;);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#123;&nbsp;<span class="rainbow-name_scalar">$inv</span>.<span class="rainbow-routine">action</span>(<span class="rainbow-name_scalar">$_</span>)&nbsp;&#125;&nbsp;<span class="rainbow-keyword">for</span>&nbsp;$&lt;info-line&gt;;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#123;&nbsp;<span class="rainbow-name_scalar">$inv</span>.items.<span class="rainbow-routine">push</span>(Item.<span class="rainbow-routine">action</span>(<span class="rainbow-name_scalar">$_</span>))&nbsp;&#125;&nbsp;<span class="rainbow-keyword">for</span>&nbsp;$&lt;item-line&gt;;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-keyword">make</span>&nbsp;<span class="rainbow-name_scalar">$inv</span>;<br>&nbsp;&nbsp;&nbsp;&nbsp;&#125;<br>&#125;<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><span class="rainbow-keyword">sub</span>&nbsp;<span class="rainbow-routine">parse</span>(<span class="rainbow-type">Str</span>&nbsp;<span class="rainbow-name_scalar">$text</span>&nbsp;<span class="rainbow-keyword">--&gt;</span>&nbsp;Invoice)&nbsp;&#123;<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-type">Grammar</span>.<span class="rainbow-routine">parse</span>(<span class="rainbow-name_scalar">$text</span><span class="rainbow-operator">,</span>&nbsp;:actions(Actions.<span class="rainbow-routine">new</span>)).<span class="rainbow-keyword">made</span>;<br>&#125;<br><br><br><span class="rainbow-keyword">sub</span>&nbsp;render(Invoice&nbsp;<span class="rainbow-name_scalar">$inv</span>&nbsp;<span class="rainbow-keyword">--&gt;</span>&nbsp;<span class="rainbow-type">Str</span>)&nbsp;&#123;<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-keyword">my</span>&nbsp;<span class="rainbow-name_array">@lines</span>&nbsp;<span class="rainbow-operator">=</span>&nbsp;(<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-string_delimiter">&quot;</span><span class="rainbow-string">Invoice: </span><span class="rainbow-escape">&#123;</span><span class="rainbow-name_scalar">$inv</span>.<span class="rainbow-routine">id</span><span class="rainbow-escape">&#125;</span><span class="rainbow-string_delimiter">&quot;</span><span class="rainbow-operator">,</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-string_delimiter">&quot;</span><span class="rainbow-string">Date:    </span><span class="rainbow-escape">&#123;</span><span class="rainbow-name_scalar">$inv</span>.date<span class="rainbow-escape">&#125;</span><span class="rainbow-string_delimiter">&quot;</span><span class="rainbow-operator">,</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-string_delimiter">&quot;</span><span class="rainbow-string">Client:  </span><span class="rainbow-escape">&#123;</span><span class="rainbow-name_scalar">$inv</span>.client<span class="rainbow-escape">&#125;</span><span class="rainbow-string_delimiter">&quot;</span><span class="rainbow-operator">,</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-string_delimiter">&quot;</span><span class="rainbow-string_delimiter">&quot;</span><span class="rainbow-operator">,</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-routine">sprintf</span>(<span class="rainbow-string_delimiter">&quot;</span><span class="rainbow-name_hash">%-30s</span><span class="rainbow-string"> </span><span class="rainbow-name_hash">%6s</span><span class="rainbow-string"> </span><span class="rainbow-name_hash">%8s</span><span class="rainbow-string"> </span><span class="rainbow-name_hash">%10s</span><span class="rainbow-string_delimiter">&quot;</span><span class="rainbow-operator">,</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-string_delimiter">&quot;</span><span class="rainbow-string">Description</span><span class="rainbow-string_delimiter">&quot;</span><span class="rainbow-operator">,</span>&nbsp;<span class="rainbow-string_delimiter">&quot;</span><span class="rainbow-string">Hours</span><span class="rainbow-string_delimiter">&quot;</span><span class="rainbow-operator">,</span>&nbsp;<span class="rainbow-string_delimiter">&quot;</span><span class="rainbow-string">Rate</span><span class="rainbow-string_delimiter">&quot;</span><span class="rainbow-operator">,</span>&nbsp;<span class="rainbow-string_delimiter">&quot;</span><span class="rainbow-string">Subtotal</span><span class="rainbow-string_delimiter">&quot;</span>)<span class="rainbow-operator">,</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-string_delimiter">&quot;</span><span class="rainbow-string">-</span><span class="rainbow-string_delimiter">&quot;</span>&nbsp;<span class="rainbow-operator">x</span>&nbsp;58<span class="rainbow-operator">,</span><br>&nbsp;&nbsp;&nbsp;&nbsp;);<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-keyword">for</span>&nbsp;<span class="rainbow-name_scalar">$inv</span>.items&nbsp;&#123;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-name_array">@lines</span>.push:&nbsp;<span class="rainbow-routine">sprintf</span>(<span class="rainbow-string_delimiter">&quot;</span><span class="rainbow-name_hash">%-30s</span><span class="rainbow-string"> </span><span class="rainbow-name_hash">%6</span><span class="rainbow-string">.1f </span><span class="rainbow-name_hash">%8</span><span class="rainbow-string">.2f </span><span class="rainbow-name_hash">%10</span><span class="rainbow-string">.2f</span><span class="rainbow-string_delimiter">&quot;</span><span class="rainbow-operator">,</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.description<span class="rainbow-operator">,</span>&nbsp;.hours<span class="rainbow-operator">,</span>&nbsp;.rate<span class="rainbow-operator">,</span>&nbsp;.subtotal);<br>&nbsp;&nbsp;&nbsp;&nbsp;&#125;<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-keyword">my</span>&nbsp;<span class="rainbow-name_scalar">$tax-label</span>&nbsp;<span class="rainbow-operator">=</span>&nbsp;<span class="rainbow-string_delimiter">&quot;</span><span class="rainbow-string">Tax (</span><span class="rainbow-escape">&#123;</span><span class="rainbow-name_scalar">$inv</span>.tax-rate&nbsp;<span class="rainbow-operator">*</span>&nbsp;100<span class="rainbow-escape">&#125;</span><span class="rainbow-string">%)</span><span class="rainbow-string_delimiter">&quot;</span>;<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-keyword">given</span>&nbsp;<span class="rainbow-name_array">@lines</span>&nbsp;&#123;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.push:&nbsp;<span class="rainbow-string_delimiter">&quot;</span><span class="rainbow-string">-</span><span class="rainbow-string_delimiter">&quot;</span>&nbsp;<span class="rainbow-operator">x</span>&nbsp;58;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.push:&nbsp;<span class="rainbow-routine">sprintf</span>(<span class="rainbow-string_delimiter">&quot;</span><span class="rainbow-name_hash">%46s</span><span class="rainbow-string"> </span><span class="rainbow-name_hash">%10</span><span class="rainbow-string">.2f</span><span class="rainbow-string_delimiter">&quot;</span><span class="rainbow-operator">,</span>&nbsp;<span class="rainbow-string_delimiter">&quot;</span><span class="rainbow-string">Subtotal</span><span class="rainbow-string_delimiter">&quot;</span><span class="rainbow-operator">,</span>&nbsp;&nbsp;<span class="rainbow-name_scalar">$inv</span>.subtotal);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.push:&nbsp;<span class="rainbow-routine">sprintf</span>(<span class="rainbow-string_delimiter">&quot;</span><span class="rainbow-name_hash">%46s</span><span class="rainbow-string"> </span><span class="rainbow-name_hash">%10</span><span class="rainbow-string">.2f</span><span class="rainbow-string_delimiter">&quot;</span><span class="rainbow-operator">,</span>&nbsp;<span class="rainbow-name_scalar">$tax-label</span><span class="rainbow-operator">,</span>&nbsp;&nbsp;<span class="rainbow-name_scalar">$inv</span>.tax);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.push:&nbsp;<span class="rainbow-routine">sprintf</span>(<span class="rainbow-string_delimiter">&quot;</span><span class="rainbow-name_hash">%46s</span><span class="rainbow-string"> </span><span class="rainbow-name_hash">%10</span><span class="rainbow-string">.2f</span><span class="rainbow-string_delimiter">&quot;</span><span class="rainbow-operator">,</span>&nbsp;<span class="rainbow-string_delimiter">&quot;</span><span class="rainbow-string">Total</span><span class="rainbow-string_delimiter">&quot;</span><span class="rainbow-operator">,</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="rainbow-name_scalar">$inv</span>.<span class="rainbow-routine">total</span>);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.<span class="rainbow-routine">join</span>(<span class="rainbow-string_delimiter">&quot;</span><span class="rainbow-escape">\n</span><span class="rainbow-string_delimiter">&quot;</span>);<br>&nbsp;&nbsp;&nbsp;&nbsp;&#125;<br>&#125;<br><br><span class="rainbow-keyword">my</span>&nbsp;<span class="rainbow-name_scalar">$EXAMPLE</span>&nbsp;<span class="rainbow-operator">=</span>&nbsp;<span class="rainbow-string_delimiter">q:to/END/</span>;<br><span class="rainbow-string">invoice INV-001<br>  date 2026-04-29<br>  client &quot;Acme Corp&quot;<br><br>  item &quot;Website redesign&quot;  hours 10  rate 150<br>  item &quot;Hosting setup&quot;     hours 2   rate 100<br><br>  tax 8%</span><span class="rainbow-string_delimiter"><br>END</span><br><br><span class="rainbow-keyword">my</span>&nbsp;<span class="rainbow-name_scalar">$inv</span>&nbsp;<span class="rainbow-operator">=</span>&nbsp;<span class="rainbow-routine">parse</span>(<span class="rainbow-name_scalar">$EXAMPLE</span>);<br><span class="rainbow-routine">say</span>&nbsp;render(<span class="rainbow-name_scalar">$inv</span>);
+</pre>
+</div>
+                </div>
+            
+</div></main>
+<footer class="container"></footer>
+<script>    // Hilite-helper.js
+
+    function copyCode() {
+        // copy code block to clipboard adapted from solution at
+        // https://stackoverflow.com/questions/34191780/javascript-copy-string-to-clipboard-as-text-html
+        // if behaviour problems with different browsers add stylesheet code from that solution.
+        const copyButtons = Array.from(document.querySelectorAll('.copy-code'));
+        copyButtons.forEach( function( button ) {
+        // this works with / without label
+        var codeElement = button.nextElementSibling;
+        while (codeElement && codeElement.tagName !== 'DIV') {
+          codeElement = codeElement.nextElementSibling;
+        }
+        button.addEventListener( 'click', function(insideButton) {
+            var container = document.createElement('div');
+            container.innerHTML = codeElement.innerHTML;
+                container.style.position = 'fixed';
+                container.style.pointerEvents = 'none';
+                container.style.opacity = 0;
+                document.body.appendChild(container);
+                window.getSelection().removeAllRanges();
+                var range = document.createRange();
+                range.selectNode(container);
+                window.getSelection().addRange(range);
+                document.execCommand("copy", false);
+                document.body.removeChild(container);
+            });
+        });
+    }
+
+    // DOM ready
+    document.addEventListener('DOMContentLoaded', function () {
+        // trigger the highlighter for non-Raku code
+        copyCode();
+        hljs.highlightAll();
+    });
+
+    // HTMX updates
+    document.addEventListener('htmx:afterSwap', function () {
+        copyCode();
+        hljs.highlightAll();
+    });
+</script>
+
+<script>const hamburger = document.getElementById('hamburger');
+const menu = document.getElementById('menu');
+
+if (hamburger && menu) {
+    hamburger.addEventListener('click', () => {
+        menu.classList.toggle('show');
+    });
+
+    document.addEventListener('click', (e) => {
+        if (!menu.contains(e.target) && !hamburger.contains(e.target)) {
+            menu.classList.remove('show');
+        }
+    });
+}
+
+// Hide the menu when resizing the viewport to a wider width
+window.addEventListener('resize', () => {
+    if (window.innerWidth > 768) {
+        menu.classList.remove('show');
+    }
+});
+</script>
+</body>
+</html>
