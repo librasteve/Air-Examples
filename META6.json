@@ -6,16 +6,26 @@
         "librasteve"
     ],
     "auth": "zef:librasteve",
+    "perl": "6.d",
     "depends": [
         "Air",
         "Air::Plugin::Hilite",
         "Air::Plugin::Asciinema",
+        "Air::Plugin::Wordcloud",
         "Air::Plugin::RakuDoc"
     ],
     "build-depends": [],
+    "test-depends": [],
+    "resources": [],
     "provides": {
         "Air::Examples": "lib/Air/Examples.rakumod"
     },
+    "tags": [
+        "air",
+        "htmx",
+        "examples",
+        "web"
+    ],
     "license": "Artistic-2.0",
     "source-url": "https://github.com/librasteve/Air-Examples.git"
 }
