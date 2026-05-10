@@ -13,7 +13,7 @@ _PLEASE NOTE: FOR THE EDITROW EXAMPLE, PLEASE INSTALL A PATCHED VERSION OF CROMP
 
 Playing with the hArc stack (HTMX, Air, Red, Cro) - https://harcstack.org. Some websites with Pico CSS styling.
 
-## GETTING STARTED
+## Getting Started
 
 Install raku - eg. from [rakubrew](https://rakubrew.org), then:
 
@@ -35,7 +35,7 @@ You will also need a SASS compiler such as Dart (e.g. from [here](https://sass-l
 - point browser to `http://localhost:3000`
 
 
-## COPYRIGHT AND LICENSE
+## Copyright and License
 
 Copyright(c) 2026 Henley Cloud Consulting Ltd.
 Copyright(c) 2026 Stephen Roe.
