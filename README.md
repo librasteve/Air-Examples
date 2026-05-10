@@ -17,26 +17,27 @@ Playing with the hArc stack (HTMX, Air, Red, Cro) - https://harcstack.org. Some 
 
 Install raku - eg. from [rakubrew](https://rakubrew.org), then:
 
-### Install Air, Cro & Red
+### Install Cro, Red & Air
 - `zef install --/test cro`
-- `zef install Red --exclude="pq:ver<5>"`
-- `zef install Air`
+- `zef install Red --exclude="pq:ver<5>"`  [optional]
+- `zef install Air::Examples`
 
 If this is your first Raku installation, you may need some native libraries (e.g. for UUID for Red), please check the module specific documentation and issues.
 
-You will also need a SASS compiler such as Dart (see below).
+You will also need a SASS compiler such as Dart (e.g. from [here](https://sass-lang.com/install/)).
 
 ### Git clone this repo
 - `git clone https://github.com/librasteve/Air-Examples.git`
 
 ### Run an example and view it
-- `cd Air-Examples/bin`
-- `ls`
-- `raku 00-nano.raku`
+- `cd Air-Examples`
+- `raku bin/00-nano.raku`
+- point browser to `http://localhost:3000`
 
 
 ## COPYRIGHT AND LICENSE
 
 Copyright(c) 2026 Henley Cloud Consulting Ltd.
+Copyright(c) 2026 Stephen Roe.
 
 This library is free software; you can redistribute it and/or modify it under the Artistic License 2.0.
