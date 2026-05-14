@@ -5,6 +5,6 @@
 .ipynb_checkpoints/*
 .log
 .pem
+/static/css/node_modules
 .idea/
 *.iml
-/static/css/node_modules
