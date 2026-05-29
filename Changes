@@ -1,6 +1,7 @@
 Revision history for Air::Examples
 
 {{$NEXT}}
+    - add 28-left-menu
 
 0.0.23  2026-05-23T20:32:47+01:00
     - add captcha to 12-formshort
