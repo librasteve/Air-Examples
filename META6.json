@@ -10,7 +10,7 @@
     "Air::Plugin::Hilite",
     "Air::Plugin::Asciinema",
     "Air::Plugin::Wordcloud",
-    "Air::Plugin::RakuDoc"
+    "Air::Plugin::Rakudoc"
   ],
   "description": "hArc stack website examples (HTMX, Air, Red, Cro)",
   "license": "Artistic-2.0",

@@ -2,7 +2,7 @@
 
 use Air::Functional :BASE;
 use Air::Base;
-use Air::Plugin::RakuDoc;
+use ;
 
 
 my &index = &page.assuming(
@@ -18,7 +18,7 @@ my &index = &page.assuming(
 );
 
 my $base-examples =
-    site :register[Air::Plugin::RakuDoc.new, LightDark.new], :theme-color<green>, :bold-color<red>,
+    site :register[.new, LightDark.new], :theme-color<green>, :bold-color<red>,
         index
         main
             div [

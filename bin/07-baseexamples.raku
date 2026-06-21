@@ -10,7 +10,7 @@ my &index = &page.assuming(
 );
 
 my $base-examples =
-    site :register[Tabs.new, Lightbox.new, Dialog.new], #:theme-color<blue>,
+    site :register[Tabs.new, Folds.new, Lightbox.new, Dialog.new], #:theme-color<blue>,
         index #:REFRESH(5),
         main
             div [
@@ -59,9 +59,16 @@ my $base-examples =
 
                 h3 'Tabs';
                 tabs [
-                    Tab1 => tab p "tada";
-                    Tab2 => tab p "yoda";
-                    Tab3 => tab p "coda";
+                    First => tab p "tada";
+                    Second => tab p "yoda";
+                    Third => tab p "coda";
+                ];
+                hr;
+
+                h3 'Folds';
+                folds [
+                    First  => fold p "ori...";
+                    Second => fold p "...gami";
                 ];
                 hr;
 
