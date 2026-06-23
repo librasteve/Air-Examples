@@ -2,6 +2,9 @@ Revision history for Air::Examples
 
 {{$NEXT}}
 
+0.0.25  2026-06-23T17:23:18+01:00
+    - add Fold to baseexamples
+
 0.0.24  2026-05-29T07:42:00+01:00
     - add 28-left-menu
 
