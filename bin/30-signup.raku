@@ -24,6 +24,13 @@ class SignupForm is Air::Plugin::MailForm {
         "Nick:  { $.nick || '(not provided)' }\n" ~
         "Email: { $.email }"
     }
+
+    method form-routes {
+        self.init;
+        self.submit: -> SignupForm $form {
+            self.submit-form($form)
+        }
+    }
 }
 
 my $signup = SignupForm.empty;
