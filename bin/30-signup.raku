@@ -19,10 +19,16 @@ class SignupForm is Air::Plugin::MailForm {
             if $!nick && $!nick.trim.contains(/ \s /);
     }
 
-    method mail-body {
-        "Name:  { $.name  }\n" ~
-        "Nick:  { $.nick || '(not provided)' }\n" ~
-        "Email: { $.email }"
+    method mail-message(Str $from, Str $to, Str $subject --> Str) {
+        qq:to/END/;
+        From:    $from
+        To:      $to
+        Subject: $subject
+
+        Name:  { $.name  }
+        Nick:  { $.nick || '(not provided)' }
+        Email: { $.email }
+        END
     }
 
     method form-routes {
