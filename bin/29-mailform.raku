@@ -4,6 +4,8 @@ use Air::Functional :BASE;
 use Air::Base;
 use Air::Plugin::MailForm;
 
+my $contact = Air::Plugin::ContactForm.empty;
+
 my &index = &page.assuming(
     title => 'Contact Us',
     nav => nav(
@@ -12,11 +14,11 @@ my &index = &page.assuming(
 );
 
 my $site =
-site :register[$mail-form, LightDark.new],
+site :register[$contact, LightDark.new],
     index
         main [
             h3 'Contact Us';
-            $mail-form;
+            $contact;
         ]
 ;
 
