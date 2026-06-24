@@ -1,6 +1,8 @@
 Revision history for Air::Examples
 
 {{$NEXT}}
+    - add 29-mailform
+    - add 30-signup
 
 0.0.25  2026-06-23T17:23:18+01:00
     - add Fold to baseexamples
