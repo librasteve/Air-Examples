@@ -1,6 +1,8 @@
 Revision history for Air::Examples
 
 {{$NEXT}}
+
+0.0.26  2026-07-05T08:31:59+09:30
     - add 29-mailform
     - add 30-signup
     - add 31-donate
