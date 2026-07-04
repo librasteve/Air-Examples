@@ -11,7 +11,8 @@
     "Air::Plugin::Asciinema",
     "Air::Plugin::Wordcloud",
     "Air::Plugin::Rakudoc",
-    "Air::Plugin::MailForm"
+    "Air::Plugin::MailForm",
+    "Air::Plugin::Donate"
   ],
   "description": "hArc stack website examples (HTMX, Air, Red, Cro)",
   "license": "Artistic-2.0",
