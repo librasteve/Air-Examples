@@ -2,8 +2,7 @@
 
 use Air::Functional :BASE;
 use Air::Base;
-use ;
-
+use Air::Plugin::Rakudoc;
 
 my &index = &page.assuming(
     title       => 'hÅrc',
